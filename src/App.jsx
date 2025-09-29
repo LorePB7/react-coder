@@ -4,6 +4,7 @@ import Navbar from "./components/NavBar";
 import Home from "./pages/Home";
 import Category from "./pages/Category";
 import ItemDetailPage from "./pages/ItemDetailPage";
+import Error404 from "./pages/Error404";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/category/:categoryId" element={<Category />} />
           <Route path="/item/:id" element={<ItemDetailPage />} />
+          <Route path="*" element={<Error404 />} />
         </Routes>
       </div>
     </Router>

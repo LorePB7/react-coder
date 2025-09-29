@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getProducts, getProductsByCategory } from "../mock/products";
 import ItemList from "./ItemList";
+import Loader from "./Loader";
 
 const ItemListContainer = ({ greeting }) => {
   const [products, setProducts] = useState([]);
@@ -45,14 +46,7 @@ const ItemListContainer = ({ greeting }) => {
   };
 
   if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <span className="ml-3 text-lg text-gray-600">Cargando productos...</span>
-        </div>
-      </div>
-    );
+    return <Loader text="Cargando productos..." />;
   }
 
   return (
