@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import ItemCount from "./ItemCount";
+import { useCart } from "../context/CartContext";
 
 const ItemDetail = ({ product }) => {
+  const [showCartButton, setShowCartButton] = useState(false);
+  const { addItem } = useCart();
+
+  const handleAddToCart = (quantity) => {
+    addItem(product, quantity);
+    setShowCartButton(true);
+  };
   if (!product) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -25,16 +34,16 @@ const ItemDetail = ({ product }) => {
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="md:flex">
           {/* Imagen del producto */}
-          <div className="md:w-1/2">
+          <div className="md:w-2/5 bg-gray-100 flex items-center justify-center p-8">
             <img 
               src={product.image} 
               alt={product.name}
-              className="w-full h-96 md:h-full object-cover"
+              className="w-full h-auto max-h-96 object-contain"
             />
           </div>
           
   
-          <div className="md:w-1/2 p-8">
+          <div className="md:w-3/5 p-8">
             <div className="mb-4">
               <Link 
                 to="/"
@@ -72,12 +81,32 @@ const ItemDetail = ({ product }) => {
               </ul>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col space-y-4">
               {product.stock > 0 ? (
                 <>
-                  <button className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium text-lg">
-                    Agregar al Carrito
-                  </button>
+                  {!showCartButton ? (
+                    <ItemCount stock={product.stock} onAdd={handleAddToCart} />
+                  ) : (
+                    <div className="flex flex-col space-y-4">
+                      <div className="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-md">
+                        ¡Producto agregado al carrito exitosamente!
+                      </div>
+                      <div className="flex space-x-4">
+                        <Link
+                          to="/cart"
+                          className="bg-green-600 text-white px-8 py-3 rounded-md hover:bg-green-700 transition-colors duration-200 font-medium text-lg"
+                        >
+                          Ir al Carrito
+                        </Link>
+                        <button
+                          onClick={() => setShowCartButton(false)}
+                          className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium text-lg"
+                        >
+                          Agregar más
+                        </button>
+                      </div>
+                    </div>
+                  )}
                   
                   {product.stock <= 5 && (
                     <div className="text-orange-600 font-medium">
