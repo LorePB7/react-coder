@@ -39,15 +39,6 @@ const Item = ({ product }) => {
         <div className="text-2xl font-bold text-blue-600 mb-4">
           ${product.price}
         </div>
-        
-
-        {showConfirmation && (
-          <div className="mb-3 bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded text-sm text-center animate-fade-in">
-            ¡Agregado al carrito!
-          </div>
-        )}
-
-
         <div className="flex gap-2">
           <Link 
             to={`/item/${product.id}`}
@@ -66,27 +57,16 @@ const Item = ({ product }) => {
             <span>Agregar</span>
           </button>
         </div>
+
+        <div className="h-[38px] overflow-hidden mt-1">
+          {showConfirmation && (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded text-sm text-center animate-fade-in">
+              ¡Agregado al carrito!
+            </div>
+          )}
+        </div>
       </div>
       
-      <div className="mt-2 h-6 flex items-center">
-        {product.stock <= 5 && product.stock > 0 && (
-          <div className="text-sm text-orange-600 font-medium">
-            ¡Últimas {product.stock} unidades!
-          </div>
-        )}
-        
-        {product.stock === 0 && (
-          <div className="text-sm text-red-600 font-medium">
-            Sin stock
-          </div>
-        )}
-        
-        {product.stock > 5 && (
-          <div className="text-sm text-transparent">
-            Espacio reservado
-          </div>
-        )}
-      </div>
     </div>
   );
 };
