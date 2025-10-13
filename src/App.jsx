@@ -1,6 +1,7 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/NavBar";
+import Footer from "./components/Footer";
 import Home from "./components/Home";
 import Category from "./components/Category";
 import ItemDetailPage from "./components/ItemDetailPage";
@@ -25,6 +26,7 @@ function App() {
               <Route path="*" element={<Error404 />} />
             </Routes>
           </main>
+          <Footer />
         </div>
       </Router>
     </CartProvider>
