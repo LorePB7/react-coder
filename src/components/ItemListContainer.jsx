@@ -12,11 +12,11 @@ const ItemListContainer = ({ greeting }) => {
 
   useEffect(() => {
     setLoading(true);
-    //conectarnos con nuestra collection
+
     const prodCollection = categoryId 
       ? query(collection(db, "productos"), where("category", "==", categoryId))
       : collection(db, "productos");
-    //pedir los datos (documentos)
+
     getDocs(prodCollection)
       .then((res) => {
         const list = res.docs.map((doc) => {
