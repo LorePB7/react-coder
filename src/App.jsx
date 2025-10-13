@@ -7,6 +7,7 @@ import Category from "./components/Category";
 import ItemDetailPage from "./components/ItemDetailPage";
 import CartView from "./components/CartView";
 import Checkout from "./components/Checkout";
+import Comprobante from "./components/Comprobante";
 import Error404 from "./components/Error404";
 import { CartProvider } from "./context/CartContext";
 
@@ -23,6 +24,7 @@ function App() {
               <Route path="/item/:id" element={<ItemDetailPage />} />
               <Route path="/cart" element={<CartView />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/comprobante/:orderId" element={<Comprobante />} />
               <Route path="*" element={<Error404 />} />
             </Routes>
           </main>

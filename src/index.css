@@ -200,3 +200,46 @@ template {
 [hidden] {
   display: none;
 }
+
+/* Estilos para impresión del comprobante */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  
+  .print\\:hidden {
+    display: none !important;
+  }
+  
+  .comprobante-print, .comprobante-print * {
+    visibility: visible;
+  }
+  
+  .comprobante-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+    box-shadow: none;
+    border: none;
+  }
+  
+  .comprobante-print h1,
+  .comprobante-print h2 {
+    color: #000 !important;
+  }
+  
+  .comprobante-print .text-blue-600 {
+    color: #000 !important;
+  }
+  
+  .comprobante-print .bg-gray-50 {
+    background-color: #f9f9f9 !important;
+  }
+  
+  .comprobante-print .border-gray-300 {
+    border-color: #000 !important;
+  }
+}

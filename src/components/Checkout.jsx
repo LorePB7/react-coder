@@ -60,14 +60,27 @@ const Checkout = () => {
 
     addDoc(ventas, order)
       .then((res) => {
-        setOrderId(res.id); 
+        setOrderId(res.id);
+
+        clear();
+        
         Swal.fire({
           title: '¡Compra exitosa!',
           text: `Tu pedido #${res.id} fue procesado correctamente.`,
           icon: 'success',
-          confirmButtonText: 'Continuar'
-        }).then(() => {
-          clear();
+          showCancelButton: true,
+          confirmButtonText: 'Ver Comprobante',
+          cancelButtonText: 'Continuar',
+          confirmButtonColor: '#16a34a',
+          cancelButtonColor: '#6b7280'
+        }).then((result) => {
+          if (result.isConfirmed) {
+
+            navigate(`/comprobante/${res.id}`);
+          } else {
+
+            navigate('/');
+          }
         });
       })
       .catch((error) => {
