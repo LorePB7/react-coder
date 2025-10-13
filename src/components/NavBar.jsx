@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { FaHome, FaMobileAlt, FaBars, FaTimes } from "react-icons/fa";
 import { BsSpeaker } from "react-icons/bs";
 import { FaComputer } from "react-icons/fa6";
@@ -33,40 +33,64 @@ const Navbar = () => {
           
           <ul className="hidden md:flex space-x-8">
             <li>
-              <Link 
+              <NavLink 
                 to="/" 
-                className="flex items-center space-x-2 text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-white/10 group"
+                className={({ isActive }) =>
+                  `flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-white/10 group ${
+                    isActive 
+                      ? "text-blue-200 font-bold bg-white/20" 
+                      : "text-white hover:text-blue-200"
+                  }`
+                }
               >
                 <FaHome className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
                 <span>Inicio</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link 
+              <NavLink 
                 to="/category/celulares" 
-                className="flex items-center space-x-2 text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-white/10 group"
+                className={({ isActive }) =>
+                  `flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-white/10 group ${
+                    isActive 
+                      ? "text-blue-200 font-bold bg-white/20" 
+                      : "text-white hover:text-blue-200"
+                  }`
+                }
               >
                 <FaMobileAlt className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
                 <span>Celulares</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link 
+              <NavLink 
                 to="/category/computadoras" 
-                className="flex items-center space-x-2 text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-white/10 group"
+                className={({ isActive }) =>
+                  `flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-white/10 group ${
+                    isActive 
+                      ? "text-blue-200 font-bold bg-white/20" 
+                      : "text-white hover:text-blue-200"
+                  }`
+                }
               >
                 <FaComputer className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
                 <span>Computadoras</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link 
+              <NavLink 
                 to="/category/parlantes" 
-                className="flex items-center space-x-2 text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-white/10 group"
+                className={({ isActive }) =>
+                  `flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-white/10 group ${
+                    isActive 
+                      ? "text-blue-200 font-bold bg-white/20" 
+                      : "text-white hover:text-blue-200"
+                  }`
+                }
               >
                 <BsSpeaker className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
                 <span>Parlantes</span>
-              </Link>
+              </NavLink>
             </li>
           </ul>
 
@@ -97,44 +121,68 @@ const Navbar = () => {
       >
         <ul className="px-4 pt-2 pb-4 space-y-2 bg-gradient-to-r from-blue-700 to-purple-700">
           <li>
-            <Link 
+            <NavLink 
               to="/" 
-              className="flex items-center space-x-3 text-white hover:text-blue-200 px-4 py-3 rounded-md text-base font-medium transition-all duration-200 hover:bg-white/10 group"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-4 py-3 rounded-md text-base font-medium transition-all duration-200 hover:bg-white/10 group ${
+                  isActive 
+                    ? "text-blue-200 font-bold bg-white/20" 
+                    : "text-white hover:text-blue-200"
+                }`
+              }
               onClick={closeMenu}
             >
               <FaHome className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
               <span>Inicio</span>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/category/celulares" 
-              className="flex items-center space-x-3 text-white hover:text-blue-200 px-4 py-3 rounded-md text-base font-medium transition-all duration-200 hover:bg-white/10 group"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-4 py-3 rounded-md text-base font-medium transition-all duration-200 hover:bg-white/10 group ${
+                  isActive 
+                    ? "text-blue-200 font-bold bg-white/20" 
+                    : "text-white hover:text-blue-200"
+                }`
+              }
               onClick={closeMenu}
             >
               <FaMobileAlt className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
               <span>Celulares</span>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/category/computadoras" 
-              className="flex items-center space-x-3 text-white hover:text-blue-200 px-4 py-3 rounded-md text-base font-medium transition-all duration-200 hover:bg-white/10 group"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-4 py-3 rounded-md text-base font-medium transition-all duration-200 hover:bg-white/10 group ${
+                  isActive 
+                    ? "text-blue-200 font-bold bg-white/20" 
+                    : "text-white hover:text-blue-200"
+                }`
+              }
               onClick={closeMenu}
             >
               <FaComputer className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
               <span>Computadoras</span>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/category/parlantes" 
-              className="flex items-center space-x-3 text-white hover:text-blue-200 px-4 py-3 rounded-md text-base font-medium transition-all duration-200 hover:bg-white/10 group"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-4 py-3 rounded-md text-base font-medium transition-all duration-200 hover:bg-white/10 group ${
+                  isActive 
+                    ? "text-blue-200 font-bold bg-white/20" 
+                    : "text-white hover:text-blue-200"
+                }`
+              }
               onClick={closeMenu}
             >
               <BsSpeaker className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
               <span>Parlantes</span>
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </div>
