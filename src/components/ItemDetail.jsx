@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import ItemCount from "./ItemCount";
 import { useCart } from "../context/CartContext";
 
 const ItemDetail = ({ product }) => {
-  const [showCartButton, setShowCartButton] = useState(false);
   const { addItem } = useCart();
 
   const handleAddToCart = (quantity) => {
     addItem(product, quantity);
-    setShowCartButton(true);
   };
   if (!product) {
     return (
@@ -84,35 +82,7 @@ const ItemDetail = ({ product }) => {
             <div className="flex flex-col space-y-4">
               {product.stock > 0 ? (
                 <>
-                  {!showCartButton ? (
-                    <ItemCount stock={product.stock} onAdd={handleAddToCart} />
-                  ) : (
-                    <div className="flex flex-col space-y-4">
-                      <div className="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-md">
-                        ¡Producto agregado al carrito exitosamente!
-                      </div>
-                      <div className="flex space-x-4">
-                        <Link
-                          to="/cart"
-                          className="bg-green-600 text-white px-8 py-3 rounded-md hover:bg-green-700 transition-colors duration-200 font-medium text-lg"
-                        >
-                          Ir al Carrito
-                        </Link>
-                        <button
-                          onClick={() => setShowCartButton(false)}
-                          className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium text-lg"
-                        >
-                          Agregar más
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {product.stock <= 5 && (
-                    <div className="text-orange-600 font-medium">
-                      ¡Últimas {product.stock} unidades!
-                    </div>
-                  )}
+                  <ItemCount stock={product.stock} onAdd={handleAddToCart} />
                 </>
               ) : (
                 <div className="text-red-600 font-medium text-lg">

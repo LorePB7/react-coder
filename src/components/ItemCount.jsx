@@ -2,6 +2,8 @@ import React, { useState } from "react";
 
 const ItemCount = ({ stock, onAdd }) => {
   const [count, setCount] = useState(1);
+  const [added, setAdded] = useState(false);
+  const [disableAdd, setDisableAdd] = useState(false);
 
   const handleIncrement = () => {
     if (count < stock) {
@@ -16,14 +18,20 @@ const ItemCount = ({ stock, onAdd }) => {
   };
 
   const handleAddToCart = () => {
-    if (count > 0 && stock > 0) {
+    if (count > 0 && stock > 0 && !disableAdd) {
       onAdd(count);
+      setAdded(true);
+      setDisableAdd(true);
+      setTimeout(() => {
+        setDisableAdd(false);
+        setAdded(false);
+      }, 2000);
     }
   };
 
   return (
-    <div className="flex flex-col space-y-4">
-      <div className="flex items-center space-x-4">
+    <div className="flex flex-col space-y-4 items-center">
+      <div className="grid grid-cols-3 items-center justify-items-center gap-4">
         <button
           onClick={handleDecrement}
           disabled={count <= 1}
@@ -32,7 +40,7 @@ const ItemCount = ({ stock, onAdd }) => {
           -
         </button>
         
-        <span className="text-2xl font-bold text-gray-900 min-w-[3rem] text-center">
+        <span className="text-2xl font-bold text-gray-900 w-10 text-center">
           {count}
         </span>
         
@@ -49,13 +57,22 @@ const ItemCount = ({ stock, onAdd }) => {
         Stock disponible: {stock} unidades
       </div>
       
-      <button
-        onClick={handleAddToCart}
-        disabled={count <= 0 || stock <= 0}
-        className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 font-medium text-lg"
-      >
-        Agregar al Carrito
-      </button>
+      <div className="flex flex-col items-center space-y-3 w-full">
+        <button
+          onClick={handleAddToCart}
+          disabled={count <= 0 || stock <= 0 || disableAdd}
+          className="inline-flex bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 font-medium"
+        >
+          {disableAdd ? "Agregando..." : "Agregar al Carrito"}
+        </button>
+        <div className="min-h-[2rem] flex items-center mt-3">
+          {added && (
+            <div className="text-green-700 bg-green-100 border border-green-300 px-3 py-1.5 rounded-md text-sm text-center">
+              ¡Producto agregado al carrito exitosamente!
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
