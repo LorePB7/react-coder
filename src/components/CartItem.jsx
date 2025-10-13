@@ -1,11 +1,32 @@
 import React from "react";
 import { useCart } from "../context/CartContext";
+import Swal from 'sweetalert2';
 
 const CartItem = ({ item }) => {
   const { removeItem } = useCart();
 
   const handleRemove = () => {
-    removeItem(item.id);
+    Swal.fire({
+      title: '¿Eliminar producto?',
+      text: `¿Estás seguro de que querés eliminar "${item.name}" del carrito?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        removeItem(item.id);
+        Swal.fire({
+          title: '¡Eliminado!',
+          text: 'El producto fue eliminado del carrito.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      }
+    });
   };
 
   return (

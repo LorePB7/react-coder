@@ -2,9 +2,34 @@ import React from "react";
 import { useCart } from "../context/CartContext";
 import CartItem from "./CartItem";
 import EmptyCart from "./EmptyCart";
+import Swal from 'sweetalert2';
 
 const CartContainer = () => {
   const { cart, clear, getTotalPrice, getTotalItems, getUniqueItemsCount } = useCart();
+
+  const handleClearCart = () => {
+    Swal.fire({
+      title: '¿Vaciar carrito?',
+      text: '¿Estás seguro de que querés vaciar todo el carrito? Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, vaciar todo',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        clear();
+        Swal.fire({
+          title: '¡Carrito vaciado!',
+          text: 'Todos los productos fueron eliminados del carrito.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      }
+    });
+  };
 
   if (cart.length === 0) {
     return <EmptyCart />;
@@ -61,7 +86,7 @@ const CartContainer = () => {
               </button>
               
               <button
-                onClick={clear}
+                onClick={handleClearCart}
                 className="w-full bg-red-500 text-white py-3 rounded-md hover:bg-red-600 transition-colors duration-200 font-medium"
               >
                 Vaciar Carrito
