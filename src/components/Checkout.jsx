@@ -3,12 +3,14 @@ import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import Swal from 'sweetalert2';
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../services/firebase";
 
 const Checkout = () => {
   const { cart, getTotalPrice, getTotalItems, clear } = useCart();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
+  const [buyer, setBuyer] = useState({
     name: '',
     email: '',
     phone: '',
@@ -16,6 +18,7 @@ const Checkout = () => {
     city: '',
     postalCode: ''
   });
+  const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,18 +28,17 @@ const Checkout = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const buyerData = (e) => {
+    setBuyer({
+      ...buyer,
+      [e.target.name]: e.target.value
+    });
   };
 
-  const handleSubmit = (e) => {
+  const finalizarCompra = (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.phone || !formData.address || !formData.city || !formData.postalCode) {
+    if (!buyer.name || !buyer.email || !buyer.phone || !buyer.address || !buyer.city || !buyer.postalCode) {
       Swal.fire({
         title: 'Campos requeridos',
         text: 'Por favor completá todos los campos del formulario.',
@@ -46,47 +48,36 @@ const Checkout = () => {
       return;
     }
 
-    Swal.fire({
-      title: '¿Confirmar compra?',
-      html: `
-        <div class="text-left">
-          <p><strong>Total a pagar:</strong> $${getTotalPrice().toFixed(2)}</p>
-          <p><strong>Items:</strong> ${getTotalItems()} unidades</p>
-          <p><strong>Dirección:</strong> ${formData.address}, ${formData.city}</p>
-        </div>
-      `,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#16a34a',
-      cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Sí, confirmar compra',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
+    let order = {
+      comprador: buyer,
+      compras: cart,
+      total: getTotalPrice(),
+      fecha: serverTimestamp()
+    };
 
+    const ventas = collection(db, "orders");
+
+    addDoc(ventas, order)
+      .then((res) => {
+        setOrderId(res.id); 
         Swal.fire({
-          title: 'Procesando pago...',
-          text: 'Por favor esperá un momento',
-          allowOutsideClick: false,
-          didOpen: () => {
-            Swal.showLoading();
-          }
+          title: '¡Compra exitosa!',
+          text: `Tu pedido #${res.id} fue procesado correctamente.`,
+          icon: 'success',
+          confirmButtonText: 'Continuar'
+        }).then(() => {
+          clear();
         });
-
-
-        setTimeout(() => {
-          Swal.fire({
-            title: '¡Compra exitosa!',
-            text: `Tu pedido por $${getTotalPrice().toFixed(2)} fue procesado correctamente.`,
-            icon: 'success',
-            confirmButtonText: 'Continuar'
-          }).then(() => {
-            clear();
-            navigate('/');
-          });
-        }, 2000);
-      }
-    });
+      })
+      .catch((error) => {
+        console.error("Error al crear la orden:", error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Hubo un problema al procesar tu compra. Intentá de nuevo.',
+          icon: 'error',
+          confirmButtonText: 'Entendido'
+        });
+      });
   };
 
   if (loading) {
@@ -108,6 +99,39 @@ const Checkout = () => {
             className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium"
           >
             Volver al catálogo
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (orderId) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center">
+          <div className="mb-8">
+            <div className="text-6xl mb-4">✅</div>
+            <h1 className="text-4xl font-bold text-green-600 mb-4">
+              ¡Compra Exitosa!
+            </h1>
+            <p className="text-xl text-gray-600 mb-8">
+              Tu pedido ha sido procesado correctamente
+            </p>
+            <div className="bg-gray-100 rounded-lg p-6 max-w-md mx-auto">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                Número de Orden
+              </h2>
+              <p className="text-3xl font-mono text-blue-600 font-bold">
+                #{orderId}
+              </p>
+            </div>
+          </div>
+          
+          <button
+            onClick={() => navigate('/')}
+            className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium text-lg"
+          >
+            Volver al Catálogo
           </button>
         </div>
       </div>
@@ -176,7 +200,7 @@ const Checkout = () => {
             Datos de Envío
           </h2>
           
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={finalizarCompra} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -186,10 +210,9 @@ const Checkout = () => {
                   type="text"
                   id="name"
                   name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
+                  value={buyer.name}
+                  onChange={buyerData}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
                 />
               </div>
               
@@ -201,10 +224,9 @@ const Checkout = () => {
                   type="email"
                   id="email"
                   name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
+                  value={buyer.email}
+                  onChange={buyerData}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
                 />
               </div>
             </div>
@@ -217,10 +239,9 @@ const Checkout = () => {
                 type="tel"
                 id="phone"
                 name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
+                  value={buyer.phone}
+                  onChange={buyerData}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
               />
             </div>
 
@@ -232,10 +253,9 @@ const Checkout = () => {
                 type="text"
                 id="address"
                 name="address"
-                value={formData.address}
-                onChange={handleInputChange}
+                  value={buyer.address}
+                  onChange={buyerData}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
               />
             </div>
 
@@ -248,10 +268,9 @@ const Checkout = () => {
                   type="text"
                   id="city"
                   name="city"
-                  value={formData.city}
-                  onChange={handleInputChange}
+                  value={buyer.city}
+                  onChange={buyerData}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
                 />
               </div>
               
@@ -263,10 +282,9 @@ const Checkout = () => {
                   type="text"
                   id="postalCode"
                   name="postalCode"
-                  value={formData.postalCode}
-                  onChange={handleInputChange}
+                  value={buyer.postalCode}
+                  onChange={buyerData}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
                 />
               </div>
             </div>
