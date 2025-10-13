@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getProductById } from "../mock/products";
 import ItemDetail from "./ItemDetail";
 import Loader from "./Loader";
 

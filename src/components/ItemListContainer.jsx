@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getProducts, getProductsByCategory } from "../mock/products";
+import { db } from "../services/firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import ItemList from "./ItemList";
 import Loader from "./Loader";
 
@@ -10,27 +11,21 @@ const ItemListContainer = ({ greeting }) => {
   const { categoryId } = useParams();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        let productsData;
-        
-        if (categoryId) {
-          productsData = await getProductsByCategory(categoryId);
-        } else {
-          productsData = await getProducts();
-        }
-        
-        setProducts(productsData);
-      } catch (error) {
-        console.error("Error al obtener los productos:", error);
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
+    setLoading(true);
+    //conectarnos con nuestra collection
+    const prodCollection = categoryId 
+      ? query(collection(db, "productos"), where("category", "==", categoryId))
+      : collection(db, "productos");
+    //pedir los datos (documentos)
+    getDocs(prodCollection)
+      .then((res) => {
+        const list = res.docs.map((doc) => {
+          return { id: doc.id, ...doc.data() };
+        });
+        setProducts(list);
+      })
+      .catch((error) => console.log(error))
+      .finally(() => setLoading(false));
   }, [categoryId]);
 
   const getCategoryTitle = () => {
