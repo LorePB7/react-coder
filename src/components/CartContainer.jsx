@@ -2,10 +2,12 @@ import React from "react";
 import { useCart } from "../context/CartContext";
 import CartItem from "./CartItem";
 import EmptyCart from "./EmptyCart";
+import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 const CartContainer = () => {
   const { cart, clear, getTotalPrice, getTotalItems, getUniqueItemsCount } = useCart();
+  const navigate = useNavigate();
 
   const handleClearCart = () => {
     Swal.fire({
@@ -51,7 +53,7 @@ const CartContainer = () => {
 
       <div className="max-w-4xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Lista de productos */}
+
           <div className="lg:col-span-2">
             {cart.map(item => (
               <CartItem key={item.id} item={item} />
@@ -81,7 +83,10 @@ const CartContainer = () => {
             </div>
 
             <div className="flex flex-col gap-4">
-              <button className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-colors duration-200 font-medium text-lg">
+              <button 
+                onClick={() => navigate('/checkout')}
+                className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-colors duration-200 font-medium text-lg"
+              >
                 Proceder al Pago
               </button>
               

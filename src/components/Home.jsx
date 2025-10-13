@@ -1,5 +1,5 @@
 import React from "react";
-import ItemListContainer from "../components/ItemListContainer";
+import ItemListContainer from "./ItemListContainer";
 
 const Home = () => {
   return <ItemListContainer greeting="Bienvenido a Coronda Tech" />;
