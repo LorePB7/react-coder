@@ -49,7 +49,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const getUniqueItemsCount = () => {
-    return cart.length;
+    return cart.reduce((count) => count + 1, 0);
   };
 
   const getTotalPrice = () => {

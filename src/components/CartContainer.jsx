@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
 import CartItem from "./CartItem";
 import EmptyCart from "./EmptyCart";
+import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 const CartContainer = () => {
   const { cart, clear, getTotalPrice, getTotalItems, getUniqueItemsCount } = useCart();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleClearCart = () => {
     Swal.fire({
@@ -33,7 +43,11 @@ const CartContainer = () => {
     });
   };
 
-  if (cart.length === 0) {
+  if (loading) {
+    return <Loader text="Cargando carrito..." />;
+  }
+
+  if (getTotalItems() === 0) {
     return <EmptyCart />;
   }
 
