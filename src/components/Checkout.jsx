@@ -16,7 +16,8 @@ const Checkout = () => {
     phone: '',
     address: '',
     city: '',
-    postalCode: ''
+    postalCode: '',
+    paymentMethod: ''
   });
   const [orderId, setOrderId] = useState(null);
 
@@ -38,7 +39,7 @@ const Checkout = () => {
   const finalizarCompra = (e) => {
     e.preventDefault();
 
-    if (!buyer.name || !buyer.email || !buyer.phone || !buyer.address || !buyer.city || !buyer.postalCode) {
+    if (!buyer.name || !buyer.email || !buyer.phone || !buyer.address || !buyer.city || !buyer.postalCode || !buyer.paymentMethod) {
       Swal.fire({
         title: 'Campos requeridos',
         text: 'Por favor completá todos los campos del formulario.',
@@ -287,6 +288,24 @@ const Checkout = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
+            </div>
+
+            <div>
+              <label htmlFor="paymentMethod" className="block text-sm font-medium text-gray-700 mb-1">
+                Forma de Pago *
+              </label>
+              <select
+                id="paymentMethod"
+                name="paymentMethod"
+                value={buyer.paymentMethod}
+                onChange={buyerData}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Seleccioná una opción</option>
+                <option value="debito">Débito</option>
+                <option value="credito">Crédito</option>
+                <option value="transferencia">Transferencia</option>
+              </select>
             </div>
 
             <button
